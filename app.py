@@ -1,7 +1,7 @@
 import streamlit as st
 import requests
 
-S_URL = "http://127.0.0.1:8000"
+S_URL = "https://weather-be-2.onrender.com"
 
 st.title("🌤 AI Weather Agent")
 
