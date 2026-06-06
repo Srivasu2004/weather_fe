@@ -13,33 +13,38 @@ question = st.text_input(
 
 if st.button("Ask Agent"):
 
-    try:
+    if city and question:
 
-        res = requests.post(
-            f"{S_URL}/get_weather",
-            params={
-                "city": city,
-                "question": question
-            }
-        )
+        try:
 
-        if res.status_code == 200:
+            res = requests.post(
+                f"{S_URL}/get_weather",
+                params={
+                    "city": city,
+                    "question": question
+                }
+            )
 
-            data = res.json()
+            if res.status_code == 200:
 
-            st.success("Answer Generated")
+                data = res.json()
 
-            st.write("### City")
-            st.write(data["city"])
+                st.success("Answer Generated")
 
-            st.write("### Question")
-            st.write(data["question"])
+                st.write("### City")
+                st.write(data.get("city", ""))
 
-            st.write("### Answer")
-            st.write(data["answer"])
+                st.write("### Question")
+                st.write(data.get("question", ""))
 
-        else:
-            st.error(res.text)
+                st.write("### Answer")
+                st.write(data.get("answer", ""))
 
-    except Exception as e:
-        st.error(str(e))
+            else:
+                st.error(res.text)
+
+        except Exception as e:
+            st.error(str(e))
+
+    else:
+        st.warning("Please enter city and question.")
