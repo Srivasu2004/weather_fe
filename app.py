@@ -1,50 +1,117 @@
 import streamlit as st
 import requests
 
-S_URL = "https://weather-be-2.onrender.com"
+# =========================
+# BACKEND URL (CHANGE THIS)
+# =========================
+BACKEND_URL = "https://weather-be-2.onrender.com"
 
-st.title("🌤 AI Weather Agent")
+st.set_page_config(page_title="AI Travel Planner", layout="wide")
 
-city = st.text_input("Enter City")
+# =========================
+# TITLE
+# =========================
+st.title("🌍 AI Travel Planner ✈️")
 
-question = st.text_input(
-    "Ask Your Weather Question"
-)
+# =========================
+# SIDEBAR INPUTS
+# =========================
+st.sidebar.header("🧳 Plan Your Trip")
 
-if st.button("Ask Agent"):
+city = st.sidebar.text_input("📍 Destination", "Goa")
+days = st.sidebar.number_input("📅 Number of Days", min_value=1, value=5)
+budget = st.sidebar.number_input("💰 Budget Per Day (INR)", min_value=500, value=2000)
 
-    if city and question:
+generate = st.sidebar.button("🚀 Generate Plan")
 
-        try:
+# =========================
+# MAIN UI
+# =========================
+if generate:
 
-            res = requests.post(
-                f"{S_URL}/get_weather",
-                params={
-                    "city": city,
-                    "question": question
-                }
-            )
+    with st.spinner("Generating your AI travel plan..."):
 
-            if res.status_code == 200:
+        # API CALL
+        res = requests.get(
+            f"{BACKEND_URL}/plan-trip",
+            params={
+                "city": city,
+                "days": days,
+                "budget_per_day": budget
+            }
+        )
 
-                data = res.json()
+        if res.status_code != 200:
+            st.error("❌ Failed to fetch data from backend")
+            st.stop()
 
-                st.success("Answer Generated")
+        data = res.json()
 
-                st.write("### City")
-                st.write(data.get("city", ""))
+    # =========================
+    # HEADER SECTION
+    # =========================
+    st.subheader(f"📍 Destination: {city}")
 
-                st.write("### Question")
-                st.write(data.get("question", ""))
+    col1, col2, col3 = st.columns(3)
 
-                st.write("### Answer")
-                st.write(data.get("answer", ""))
+    with col1:
+        st.metric("📅 Trip Duration", f"{days} Days")
 
-            else:
-                st.error(res.text)
+    with col2:
+        st.metric("💰 Total Budget", f"₹{budget * days}")
 
-        except Exception as e:
-            st.error(str(e))
+    with col3:
+        weather = data["weather"]
+        if "temperature" in weather:
+            st.metric("🌦 Temp", f"{weather['temperature']}°C")
 
+    st.divider()
+
+    # =========================
+    # WEATHER SECTION
+    # =========================
+    st.subheader("🌦 Weather Overview")
+
+    if "temperature" in data["weather"]:
+        st.success(
+            f"{data['weather']['weather']} | "
+            f"{data['weather']['temperature']}°C | "
+            f"Humidity {data['weather']['humidity']}%"
+        )
     else:
-        st.warning("Please enter city and question.")
+        st.warning("Weather data not available")
+
+    st.divider()
+
+    # =========================
+    # RECOMMENDATIONS
+    # =========================
+    st.subheader("🔎 Travel Recommendations")
+
+    for item in data["recommendations"]["results"]:
+        st.write("👉", item)
+
+    st.divider()
+
+    # =========================
+    # BUDGET BREAKDOWN
+    # =========================
+    st.subheader("💰 Budget Breakdown")
+
+    total = data["budget"]["total_budget"]
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.info(f"Per Day Cost: ₹{budget}")
+        st.info(f"Total Days: {days}")
+
+    with col2:
+        st.success(f"Total Estimated Budget: ₹{total}")
+
+    st.divider()
+
+    # =========================
+    # FINAL MESSAGE
+    # =========================
+    st.success("✈️ Your AI Travel Plan is Ready!")
