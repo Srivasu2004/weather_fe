@@ -72,7 +72,7 @@ if generate:
     # =========================
     st.subheader("🌦 Weather Overview")
     if "temperature" in data["weather"]:
-    st.success(
+        st.success(
         f"{data['weather']['weather']} | "
         f"{data['weather']['temperature']}°C | "
         f"Humidity {data['weather']['humidity']}%"
