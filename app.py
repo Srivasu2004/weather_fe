@@ -71,25 +71,14 @@ if generate:
     # WEATHER SECTION
     # =========================
     st.subheader("🌦 Weather Overview")
-
-   weather = data.get("weather", {})
-
-if "temperature" in weather:
-
+    if "temperature" in data["weather"]:
     st.success(
-        f"{weather['weather']} | "
-        f"{weather['temperature']}°C | "
-        f"Humidity {weather['humidity']}%"
+        f"{data['weather']['weather']} | "
+        f"{data['weather']['temperature']}°C | "
+        f"Humidity {data['weather']['humidity']}%"
     )
-
 else:
-
-    st.error(
-        weather.get(
-            "error",
-            "Weather data not available"
-        )
-    )
+    st.warning("Weather data not available")
 
     st.divider()
 
