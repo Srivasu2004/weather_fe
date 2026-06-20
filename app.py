@@ -4,7 +4,7 @@ import requests
 # =========================
 # BACKEND URL (CHANGE THIS)
 # =========================
-BACKEND_URL = "https://weather-be-3.onrender.com"
+BACKEND_URL = "https://weather-be-2.onrender.com"
 
 st.set_page_config(page_title="AI Travel Planner", layout="wide")
 
