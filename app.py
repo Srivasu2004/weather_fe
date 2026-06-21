@@ -61,29 +61,27 @@ if generate:
         st.metric("💰 Total Budget", f"₹{budget * days}")
 
     with col3:
-        weather = data["weather"]
-        if "temperature" in weather:
-            st.metric("🌦 Temp", f"{weather['temperature']}°C")
+    weather = data["weather"]
+    if "temperature" in weather:
+        st.metric("🌦 Temp", f"{weather['temperature']}°C")
 
-    st.divider()
+st.divider()
 
-    # =========================
-    # WEATHER SECTION
-    # =========================
-    st.subheader("🌦 Weather Overview")
-    if "temperature" in data["weather"]:
-        st.success(
-          f"{data['weather']['weather']} | "
-          f"{data['weather']['temperature']}°C | "
-          f"Humidity {data['weather']['humidity']}%"
+# =========================
+# WEATHER SECTION
+# =========================
+st.subheader("🌦 Weather Overview")
+
+if "temperature" in data["weather"]:
+    st.success(
+        f"{data['weather']['weather']} | "
+        f"{data['weather']['temperature']}°C | "
+        f"Humidity {data['weather']['humidity']}%"
     )
-    else:
+else:
     st.warning("Weather data not available")
 
-    st.divider()
-    else:
-        st.warning("Weather data not available")
-        st.divider()
+st.divider()
 
     # =========================
     # RECOMMENDATIONS
