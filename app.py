@@ -77,7 +77,7 @@ if generate:
         f"{data['weather']['temperature']}°C | "
         f"Humidity {data['weather']['humidity']}%"
        )
-   else:
+    else:
         st.warning("Weather data not available")
 
   st.divider()
