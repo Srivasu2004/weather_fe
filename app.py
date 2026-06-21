@@ -59,34 +59,38 @@ if generate:
 
     with col2:
         st.metric("💰 Total Budget", f"₹{budget * days}")
+
     with col3:
-        weather = data["weather"]
+        weather = data.get("weather", {})
         if "temperature" in weather:
-           st.metric("🌦 Temp", f"{weather['temperature']}°C")
+            st.metric("🌦 Temp", f"{weather['temperature']}°C")
 
     st.divider()
 
-# =========================
-# WEATHER SECTION
-# =========================
+    # =========================
+    # WEATHER SECTION
+    # =========================
     st.subheader("🌦 Weather Overview")
 
-    if "temperature" in data["weather"]:
-       st.success(
-        f"{data['weather']['weather']} | "
-        f"{data['weather']['temperature']}°C | "
-        f"Humidity {data['weather']['humidity']}%"
-       )
+    weather = data.get("weather", {})
+
+    if "temperature" in weather:
+        st.success(
+            f"{weather.get('weather', 'N/A')} | "
+            f"{weather.get('temperature', 'N/A')}°C | "
+            f"Humidity {weather.get('humidity', 'N/A')}%"
+        )
     else:
         st.warning("Weather data not available")
 
-  st.divider()
+    st.divider()
+
     # =========================
     # RECOMMENDATIONS
     # =========================
     st.subheader("🔎 Travel Recommendations")
 
-    for item in data["recommendations"]["results"]:
+    for item in data.get("recommendations", {}).get("results", []):
         st.write("👉", item)
 
     st.divider()
@@ -96,7 +100,7 @@ if generate:
     # =========================
     st.subheader("💰 Budget Breakdown")
 
-    total = data["budget"]["total_budget"]
+    total = data.get("budget", {}).get("total_budget", 0)
 
     col1, col2 = st.columns(2)
 
